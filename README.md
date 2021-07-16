@@ -1,1 +1,1 @@
-# generativeNFT-template
+# JS code for GenerativeNFT Webflow Template
