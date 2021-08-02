@@ -117,3 +117,6 @@ async function claim() {
 if (document.location.href.includes("/generate")) {
   document.onload = claim();
 }
+
+window.contract = contract;
+window.web3 = web3;
