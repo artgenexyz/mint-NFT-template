@@ -98,7 +98,7 @@ async function claim() {
 
   // Minting
   let mint = await contract.methods.mint(1)
-    .send({ from: wallet })
+    .send({ from: wallet, value: 0.08 * 1e18 })
     .then(function(result) {
       document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
     })
