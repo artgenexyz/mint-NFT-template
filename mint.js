@@ -109,4 +109,6 @@ async function claim() {
     });
 }
 
-document.onload = claim();
+if (document.location.href.includes("/generate")) {
+  document.onload = claim();
+}
