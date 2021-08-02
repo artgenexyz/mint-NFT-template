@@ -7,12 +7,6 @@ var tokenID;
 var isLoading = false;
 var isPaused = false;
 
-function randomInt() {
-  let min = 1;
-  let max = 5;
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 async function generate() {
   document.querySelector('#loading-container').style = "display:none";
 
@@ -63,7 +57,6 @@ async function claim() {
   }
 
   isLoading = true;
-  tokenID = randomInt();
 
   // Listener
   var transferBlockHash = "";
@@ -100,16 +93,17 @@ async function claim() {
   let mint = await contract.methods.mint(1)
     .send({ from: wallet, value: 0.08 * 1e18 })
     .then(async (result) => {
-      const balance = await contract.methods.balanceOf(wallet).call((err, res) => {
-        if (!err) {
+      await contract.methods.walletOfOwner(wallet).call((err, res) => {
+        if (!err && res.length) {
           console.log(res);
+          tokenID = parseInt(res.slice(-1)[0]);
         }
       })
       document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
       await generate();
     })
     .catch(error => {
-      document.querySelector('#loading-modal').style = "display:none";
+      document.querySelector('#loading-container').style = "display:none";
       isLoading = false;
     });
 }
