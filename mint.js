@@ -13,22 +13,19 @@ function randomInt() {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function formattedResult(result) {
-  return `<h2>${result.name}</h2><br/><p>${result.description}</p>`
-}
-
 async function generate() {
-  // document.querySelector('#generate-done').style = "display:none";
+  document.querySelector('#loading-container').style = "display:none";
 
   let accounts = await web3.eth.getAccounts();
-  let tokenID = randomInt();
   let wallet = ethereum.selectedAddress || accounts[0];
   let url = `https://tigerfightclub.vercel.app/api/token/${tokenID}`
   let result = await (await fetch(url)).json();
 
-  document.querySelector('#generate').style = "display:block";
-  document.querySelector('#generate-info').innerHTML = formattedResult(result);
+  document.querySelector('#generate-container').style = "display:block";
+  document.querySelector('#generate-heading').innerHTML = result.name;
+  document.querySelector('#generate-description').innerHTML = result.description;
   document.querySelector('#generate-image').src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
+  document.querySelector('#generate-view-opensea').href = `https://testnets.opensea.io/assets/${address}/${tokenID}`;
 
   // document.querySelector('#generate-in-progress').style = "display:none";
   // document.querySelector('#generate-done').style = "display:block";
@@ -38,7 +35,7 @@ async function claim() {
   try {
     await connectMetaMask();
   } catch (error) {
-    alert("Connect Metamask wallet to continue");
+    alert("Connect MetaMask wallet to continue");
   }
 
   // Loading
@@ -64,6 +61,7 @@ async function claim() {
   }
 
   isLoading = true;
+  tokenID = randomInt();
 
   // Listener
   var transferBlockHash = "";
@@ -101,6 +99,7 @@ async function claim() {
     .send({ from: wallet, value: 0.08 * 1e18 })
     .then(function(result) {
       document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
+      await generate();
     })
     .catch(error => {
       document.querySelector('#loading-modal').style = "display:none";
