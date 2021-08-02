@@ -100,6 +100,11 @@ async function claim() {
   let mint = await contract.methods.mint(1)
     .send({ from: wallet, value: 0.08 * 1e18 })
     .then(async (result) => {
+      const balance = await contract.methods.balanceOf(wallet).call((err, res) => {
+        if (!err) {
+          console.log(res);
+        }
+      })
       document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
       await generate();
     })
