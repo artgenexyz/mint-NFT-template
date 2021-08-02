@@ -21,7 +21,7 @@ async function generate() {
   let url = `https://tigerfightclub.vercel.app/api/token/${tokenID}`
   let result = await (await fetch(url)).json();
 
-  document.querySelector('#generate-container').style = "display:block";
+  document.querySelector('#generate-container').style = "display:flex";
   document.querySelector('#generate-heading').innerHTML = result.name;
   document.querySelector('#generate-description').innerHTML = result.description;
   document.querySelector('#generate-image').src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
