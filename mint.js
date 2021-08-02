@@ -56,14 +56,13 @@ async function claim() {
   let wallet = ethereum.selectedAddress || accounts[0];
 
   // Network
-  let network = await web3.eth.net.getId()
-  if (network != 1) {
+  let network = await ethereum.request({ method: 'net_version' })
+  console.log(network);
+  if (network != "1" && network != "4") {
     alert("Hey! CryptoWords are only supported on the Ethereum network. It looks like you’re connected to a different network. Please check your settings and try again.");
     return;
   }
 
-  document.querySelector('#loading-text').innerHTML = "TRANSACTING WITH CRYPTOWORDS CONTRACT...";
-  document.querySelector('#loading-modal').style = "display:flex";
   isLoading = true;
 
   // Listener
@@ -98,7 +97,7 @@ async function claim() {
   });
 
   // Minting
-  let mint = await contract.methods.mint(tokenID)
+  let mint = await contract.methods.mint(1)
     .send({ from: wallet })
     .then(function(result) {
       document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
