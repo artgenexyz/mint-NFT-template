@@ -32,6 +32,8 @@ async function generate() {
 }
 
 async function claim() {
+  document.querySelector('#generate-container').style = "display:none";
+
   try {
     await connectMetaMask();
   } catch (error) {
