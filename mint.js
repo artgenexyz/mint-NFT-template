@@ -12,8 +12,8 @@ async function generate() {
 
   let accounts = await web3.eth.getAccounts();
   let wallet = ethereum.selectedAddress || accounts[0];
-  let url = `https://tigerfightclub.vercel.app/api/token/${tokenID}`
-  let result = await (await fetch(url)).json();
+  const url = await contract.methods.tokenURI(tokenID).call();
+  const result = await (await fetch(url)).json();
 
   document.querySelector('#generate-container').style = "display:flex";
   document.querySelector('#generate-heading').innerHTML = result.name;
