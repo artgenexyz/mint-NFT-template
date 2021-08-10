@@ -65,24 +65,24 @@ async function claim() {
     // Gate block hash on transfer matching sender address.
     if (eventName == "Transfer" && event.returnValues.to.toLowerCase() == wallet.toLowerCase()) {
       transferBlockHash = event.blockHash;
-      document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
+      // document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
     }
 
     // Gate Chainlink id on block hash matching Transfer.
     if (eventName == "ChainlinkRequested" && transferBlockHash.length > 0 && event.blockHash == transferBlockHash) {
       chainlinkRequestId = event.returnValues.id;
-      document.querySelector('#loading-text').innerHTML = `CONNECTING WORD #${tokenID} TO ORACLE...`;
+      // document.querySelector('#loading-text').innerHTML = `CONNECTING WORD #${tokenID} TO ORACLE...`;
     }
 
     // Gate Chainlink fulfill on matching Chainlink id.
      if (eventName == "ChainlinkFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.id == chainlinkRequestId) {
-      document.querySelector('#loading-text').innerHTML = `UPDATING WORD #${tokenID} FROM ORACLE...`;
+      // document.querySelector('#loading-text').innerHTML = `UPDATING WORD #${tokenID} FROM ORACLE...`;
     }
 
     // Gate event request id on matching Chainlink id.
     if (eventName == "RemoteMintFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.requestId == chainlinkRequestId) {
       let resultId = event.returnValues.resultId;
-      window.location.href = `word?token=${tokenID}`;
+      // window.location.href = `word?token=${tokenID}`;
     }
   });
 
