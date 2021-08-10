@@ -7,9 +7,9 @@ const isMetaMaskConnected = async () => {
 
 export async function updateMetaMaskStatus() {
   isMetaMaskConnected().then((connected) => {
-    let button = document.querySelector('#connect-text');
+    let button = document.querySelector('#connect');
     if (connected) {
-        button.innerHTML = "METAMASK CONNECTED";
+        button.textContent = "MetaMask connected";
     }
   });
 }
