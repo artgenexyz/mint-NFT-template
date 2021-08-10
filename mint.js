@@ -1,7 +1,4 @@
-import { abi, address } from './contract.js';
 import { web3, connectMetaMask } from './connectWallet.js';
-
-export let contract = new web3.eth.Contract(abi, address);
 
 var tokenID;
 var isLoading = false;
@@ -12,7 +9,7 @@ async function generate() {
 
   let accounts = await web3.eth.getAccounts();
   let wallet = ethereum.selectedAddress || accounts[0];
-  const url = await contract.methods.tokenURI(tokenID).call();
+  const url = await window.contract.methods.tokenURI(tokenID).call();
   const result = await (await fetch(url)).json();
 
   document.querySelector('#generate-container').style = "display:flex";
@@ -62,7 +59,7 @@ async function claim() {
   var transferBlockHash = "";
   var chainlinkRequestId = "";
 
-  contract.events.allEvents({}, function(error, event) {
+  window.contract.events.allEvents({}, function(error, event) {
     let eventName = event.event;
 
     // Gate block hash on transfer matching sender address.
@@ -90,10 +87,10 @@ async function claim() {
   });
 
   // Minting
-  let mint = await contract.methods.mint(1)
+  let mint = await window.contract.methods.mint(1)
     .send({ from: wallet, value: 0.08 * 1e18 })
     .then(async (result) => {
-      await contract.methods.walletOfOwner(wallet).call((err, res) => {
+      await window.contract.methods.walletOfOwner(wallet).call((err, res) => {
         if (!err && res.length) {
           console.log(res);
           tokenID = parseInt(res.slice(-1)[0]);
@@ -112,5 +109,4 @@ if (document.location.href.includes("/generate")) {
   document.onload = claim();
 }
 
-window.contract = contract;
 window.web3 = web3;
