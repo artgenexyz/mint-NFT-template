@@ -108,7 +108,13 @@ async function claim() {
     });
 }
 
-if (document.location.href.includes("/generate")) {
+const shouldLaunchMint = () => {
+  const isWPEditorActive = document.body.classList.contains("elementor-editor-active");
+  const isURL = document.location.href.includes("/generate");
+  return isURL && !isWPEditorActive;
+}
+
+if (shouldLaunchMint()) {
   document.onload = claim();
 }
 
