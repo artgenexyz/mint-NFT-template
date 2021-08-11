@@ -1,4 +1,4 @@
-import { contract } from './contract.js';
+import { address, contract } from './contract.js';
 import { web3, connectMetaMask } from './connectWallet.js';
 
 var tokenID;
