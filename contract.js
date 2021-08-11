@@ -7,7 +7,7 @@ export let abi;
 if (window.location.hostname.includes('cryptowords')) {
   address = wordsAddress;
   abi = wordsAbi;
-} else if (window.location.hostname.includes('tigerfightclub.com')) {
+} else if (window.location.hostname.includes('tigersfightclub.com')) {
   address = tigerAddress;
   abi = tigerAbi;
 }
