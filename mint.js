@@ -1,7 +1,5 @@
-import { abi, address } from './contract.js';
+import { contract } from './contract.js';
 import { web3, connectMetaMask } from './connectWallet.js';
-
-export let contract = new web3.eth.Contract(abi, address);
 
 var tokenID;
 var isLoading = false;
@@ -16,9 +14,13 @@ async function generate() {
   const result = await (await fetch(url)).json();
 
   document.querySelector('#generate-container').style = "display:flex";
-  document.querySelector('#generate-heading').innerHTML = result.name;
-  document.querySelector('#generate-description').innerHTML = result.description;
-  document.querySelector('#generate-image').src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
+  document.querySelector('#generate-heading').textContent = result.name;
+  document.querySelector('#generate-description').textContent = result.description;
+  let img = document.querySelector('#generate-image');
+  if (img.tagName !== "IMG") {
+    img = img.getElementsByTagName("img")[0];
+  }
+  img.src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
   document.querySelector('#generate-view-opensea').href = `https://testnets.opensea.io/assets/${address}/${tokenID}`;
 
   // document.querySelector('#generate-in-progress').style = "display:none";
