@@ -99,7 +99,7 @@ async function claim() {
           tokenID = parseInt(res.slice(-1)[0]);
         }
       })
-      document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
+      // document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
       await generate();
     })
     .catch(error => {
