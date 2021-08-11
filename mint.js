@@ -14,7 +14,11 @@ async function generate() {
   const result = await (await fetch(url)).json();
 
   document.querySelector('#generate-container').style = "display:flex";
-  document.querySelector('#generate-heading').textContent = result.name;
+  let heading = document.querySelector('#generate-heading');
+  if (heading.tagName !== "H2" && heading.tagName !== "H1") {
+    heading = heading.getElementsByTagName("h2")[0];
+  }
+  heading.textContent = result.name;
   document.querySelector('#generate-description').textContent = result.description;
   let img = document.querySelector('#generate-image');
   if (img.tagName !== "IMG") {
