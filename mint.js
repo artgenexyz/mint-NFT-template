@@ -25,7 +25,7 @@ async function generate() {
     img = img.getElementsByTagName("img")[0];
   }
   img.src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
-  document.querySelector('#generate-view-opensea').href = `https://testnets.opensea.io/assets/${address}/${tokenID}`;
+  document.querySelector('#generate-view-opensea').href = `https://opensea.io/assets/${address}/${tokenID}`;
 
   // document.querySelector('#generate-in-progress').style = "display:none";
   // document.querySelector('#generate-done').style = "display:block";
