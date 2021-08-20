@@ -111,8 +111,8 @@ async function claim() {
       await generate();
     })
     .catch(error => {
-      document.querySelector('#loading-container').style = "display:none";
-      isLoading = false;
+      alert("NFT minting error. Please try refreshing page, check your MetaMask connection or contact our support to resolve");
+      console.log(error);
     });
 }
 
