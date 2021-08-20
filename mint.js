@@ -95,8 +95,10 @@ async function claim() {
     }
   });
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const numberOfTokens = searchParams.get("quantity") ?? 1;
   // Minting
-  let mint = await contract.methods.mint(1)
+  let mint = await contract.methods.mint(numberOfTokens)
     .send({ from: wallet, value: 0.08 * 1e18 })
     .then(async (result) => {
       await contract.methods.walletOfOwner(wallet).call((err, res) => {
