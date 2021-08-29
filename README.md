@@ -1,5 +1,5 @@
-# JS library for Generative NFT template
+# JS library for generative NFT mint website template
+This is the JS library used for template
 https://cryptowords.webflow.io/
 
-## JS CDN for GitHub code
-https://www.jsdelivr.com/github
+If you don't know how to code, you can buy this fully customizable Webflow template from https://buildship.dev
