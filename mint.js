@@ -99,7 +99,11 @@ async function claim() {
   const numberOfTokens = searchParams.get("quantity") ?? 1;
   // Minting
   let mint = await contract.methods.mint(numberOfTokens)
-    .send({ from: wallet, value: 0.03 * numberOfTokens * 1e18 })
+    .send({
+      from: wallet,
+      value: 0.03 * numberOfTokens * 1e18,
+      gasLimit: "160000"
+    })
     .then(async (result) => {
       await contract.methods.walletOfOwner(wallet).call((err, res) => {
         if (!err && res.length) {
