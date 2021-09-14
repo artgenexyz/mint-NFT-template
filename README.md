@@ -1,4 +1,4 @@
-# JS library for generative NFT mint website template
+# JS library for NFT mint website template
 This is the JS library used for template
 https://cryptowords.webflow.io/
 
