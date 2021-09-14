@@ -1,11 +1,11 @@
-import { address, contract } from './contract.js';
+import { address, contract, mintPrice } from './contract.js';
 import { web3, connectMetaMask } from './connectWallet.js';
 
-var tokenID;
-var isLoading = false;
-var isPaused = false;
+let tokenID;
+let isLoading = false;
+let isPaused = false;
 
-async function generate() {
+const generate = async () => {
   document.querySelector('#loading-container').style = "display:none";
 
   let accounts = await web3.eth.getAccounts();
@@ -31,7 +31,7 @@ async function generate() {
   // document.querySelector('#generate-done').style = "display:block";
 }
 
-async function claim() {
+const claim = async () => {
   document.querySelector('#generate-container').style = "display:none";
 
   try {
@@ -58,15 +58,15 @@ async function claim() {
   let network = await ethereum.request({ method: 'net_version' })
   console.log(network);
   if (network != "1" && network != "4") {
-    alert("Hey! CryptoWords are only supported on the Ethereum network. It looks like you’re connected to a different network. Please check your settings and try again.");
+    alert("Only Ethereum network is supported. It looks like you’re connected to a different network. Please check your settings and try again.");
     return;
   }
 
   isLoading = true;
 
   // Listener
-  var transferBlockHash = "";
-  var chainlinkRequestId = "";
+  let transferBlockHash = "";
+  let chainlinkRequestId = "";
 
   contract.events.allEvents({}, function(error, event) {
     let eventName = event.event;
@@ -101,7 +101,7 @@ async function claim() {
   let mint = await contract.methods.mint(numberOfTokens)
     .send({
       from: wallet,
-      value: 0.03 * numberOfTokens * 1e18,
+      value: mintPrice * numberOfTokens * 1e18,
       gasLimit: "160000"
     })
     .then(async (result) => {
@@ -111,7 +111,6 @@ async function claim() {
           tokenID = parseInt(res.slice(-1)[0]);
         }
       })
-      // document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
       await generate();
     })
     .catch(error => {
