@@ -5,6 +5,15 @@ let tokenID;
 let isLoading = false;
 let isPaused = false;
 
+const updateMintedCounter = async () => {
+  const counter = document.querySelector('#total-minted');
+  if (counter) {
+    counter.textContent =
+    `Total minted: ${await contract.methods.totalSupply().call()} / ${await contract.methods.MAX_SUPPLY().call()}`;
+    console.log("Updated counter");
+  }
+}
+
 const startMint = async () => {
   const startContainer = document.querySelector('#start-container');
   if (!startContainer) {
@@ -12,6 +21,10 @@ const startMint = async () => {
     await claim();
     return;
   }
+
+  updateMintedCounter();
+  setInterval(updateMintedCounter, 5000);
+
   document.querySelector('#loading-container').style = "display:none";
   document.querySelector('#generate-container').style = "display:none";
 
@@ -20,14 +33,6 @@ const startMint = async () => {
     await claim(nTokens);
   });
 
-  setInterval(async () => {
-    const counter = document.querySelector('#total-minted');
-    if (counter) {
-      counter.textContent =
-      `Total minted: ${await contract.methods.totalSupply().call()} / ${await contract.methods.MAX_SUPPLY().call()}`;
-      console.log("Updated counter");
-    }
-  }, 5000);
 }
 
 const generate = async () => {
