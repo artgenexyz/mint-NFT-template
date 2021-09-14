@@ -5,6 +5,31 @@ let tokenID;
 let isLoading = false;
 let isPaused = false;
 
+const startMint = async () => {
+  const startContainer = document.querySelector('#start-container');
+  if (!startContainer) {
+    document.querySelector('#start-container').style = "display:none";
+    await claim();
+    return;
+  }
+  document.querySelector('#loading-container').style = "display:none";
+  document.querySelector('#generate-container').style = "display:none";
+
+  document.querySelector('#submit-quantity-form').addEventListener("submit", async (e) => {
+    const nTokens = document.querySelector('#quantity-select').value;
+    await claim(nTokens);
+  });
+
+  setInterval(async () => {
+    const counter = document.querySelector('#total-minted');
+    if (counter) {
+      counter.textContent =
+      `Total minted: ${await contract.methods.totalSupply().call()} / ${await contract.methods.MAX_SUPPLY().call()}`;
+      console.log("Updated counter");
+    }
+  }, 5000);
+}
+
 const generate = async () => {
   document.querySelector('#loading-container').style = "display:none";
 
@@ -26,12 +51,10 @@ const generate = async () => {
   }
   img.src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
   document.querySelector('#generate-view-opensea').href = `https://opensea.io/assets/${address}/${tokenID}`;
-
-  // document.querySelector('#generate-in-progress').style = "display:none";
-  // document.querySelector('#generate-done').style = "display:block";
 }
 
-const claim = async () => {
+const claim = async (nTokens) => {
+  document.querySelector('#loading-container').style = "display:flex";
   document.querySelector('#generate-container').style = "display:none";
 
   try {
@@ -40,17 +63,10 @@ const claim = async () => {
     alert("Connect MetaMask wallet to continue");
   }
 
-  // Loading
-  if (isLoading) {
+  if (isLoading || isPaused) {
     return false;
   }
 
-  // Paused
-  if (isPaused) {
-    return false;
-  }
-
-  // Wallet
   let accounts = await web3.eth.getAccounts();
   let wallet = ethereum.selectedAddress || accounts[0];
 
@@ -96,7 +112,7 @@ const claim = async () => {
   });
 
   const searchParams = new URLSearchParams(window.location.search);
-  const numberOfTokens = searchParams.get("quantity") ?? 1;
+  const numberOfTokens = nTokens ?? searchParams.get("quantity") ?? 1;
   // Minting
   let mint = await contract.methods.mint(numberOfTokens)
     .send({
@@ -126,7 +142,7 @@ const shouldLaunchMint = () => {
 }
 
 if (shouldLaunchMint()) {
-  document.onload = claim();
+  document.onload = startMint();
 }
 
 window.contract = contract;
