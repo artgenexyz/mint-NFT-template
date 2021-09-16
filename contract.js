@@ -18,7 +18,7 @@ if (window.location.hostname.includes('cryptowords')) {
 } else if (window.location.hostname.includes('textapes.art')) {
   address = apesAddress;
   abi = apesAbi;
-  mintPrice = 0.05;
+  mintPrice = 0.02;
 }
 
 export let contract = new web3.eth.Contract(abi, address);
