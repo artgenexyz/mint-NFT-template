@@ -123,7 +123,7 @@ const claim = async (nTokens) => {
     .send({
       from: wallet,
       value: mintPrice * numberOfTokens * 1e18,
-      gasLimit: `${170000 * numberOfTokens}`
+      gasLimit: `${180000 * numberOfTokens}`
     })
     .then(async (result) => {
       await contract.methods.walletOfOwner(wallet).call((err, res) => {
