@@ -63,7 +63,7 @@ const claim = async (nTokens) => {
   document.querySelector('#generate-container').style = "display:none";
 
   try {
-    await connectMetaMask();
+    await connectMetaMask(false);
   } catch (error) {
     alert("Connect MetaMask wallet to continue");
   }
