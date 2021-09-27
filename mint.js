@@ -153,3 +153,4 @@ if (shouldLaunchMint()) {
 
 window.contract = contract;
 window.web3 = web3;
+window.mint = mint;
