@@ -17,7 +17,6 @@ const updateMintedCounter = async () => {
 const startMint = async () => {
   const startContainer = document.querySelector('#start-container');
   if (!startContainer) {
-    document.querySelector('#start-container').style = "display:none";
     await mint();
     return;
   }
