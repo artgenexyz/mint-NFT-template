@@ -35,31 +35,34 @@ const startMint = async () => {
 }
 
 const generate = async () => {
-  document.querySelector('#loading-container').style = "display:none";
+  const generateContainer = document.querySelector('#generate-container');
+  if (!generateContainer) return;
+
+  (document.querySelector('#loading-container') ?? {}).style = "display:none";
 
   let accounts = await web3.eth.getAccounts();
   let wallet = ethereum.selectedAddress || accounts[0];
   const url = await contract.methods.tokenURI(tokenID).call();
   const result = await (await fetch(url)).json();
 
-  document.querySelector('#generate-container').style = "display:flex";
-  let heading = document.querySelector('#generate-heading');
-  if (heading.tagName !== "H2" && heading.tagName !== "H1") {
+  generateContainer.style = "display:flex";
+  let heading = document.querySelector('#generate-heading') ?? {};
+  if (heading?.tagName !== "H2" && heading?.tagName !== "H1") {
     heading = heading.getElementsByTagName("h2")[0];
   }
   heading.textContent = result.name;
-  document.querySelector('#generate-description').textContent = result.description;
+  (document.querySelector('#generate-description') ?? {}).textContent = result.description;
   let img = document.querySelector('#generate-image');
-  if (img.tagName !== "IMG") {
+  if (img?.tagName !== "IMG") {
     img = img.getElementsByTagName("img")[0];
   }
   img.src = `https://cloudflare-ipfs.com/ipfs/${result.image.split("//")[1]}`;
-  document.querySelector('#generate-view-opensea').href = `https://opensea.io/assets/${address}/${tokenID}`;
+  (document.querySelector('#generate-view-opensea') ?? {}).href = `https://opensea.io/assets/${address}/${tokenID}`;
 }
 
 const mint = async (nTokens, tier) => {
-  document.querySelector('#loading-container').style = "display:flex";
-  document.querySelector('#generate-container').style = "display:none";
+  (document.querySelector('#loading-container') ?? {}).style = "display:flex";
+  (document.querySelector('#generate-container') ?? {}).style = "display:none";
 
   try {
     await connectMetaMask(false);
@@ -93,24 +96,20 @@ const mint = async (nTokens, tier) => {
     // Gate block hash on transfer matching sender address.
     if (eventName == "Transfer" && event.returnValues.to.toLowerCase() == wallet.toLowerCase()) {
       transferBlockHash = event.blockHash;
-      // document.querySelector('#loading-text').innerHTML = `GENERATING WORD #${tokenID}...`;
     }
 
     // Gate Chainlink id on block hash matching Transfer.
     if (eventName == "ChainlinkRequested" && transferBlockHash.length > 0 && event.blockHash == transferBlockHash) {
       chainlinkRequestId = event.returnValues.id;
-      // document.querySelector('#loading-text').innerHTML = `CONNECTING WORD #${tokenID} TO ORACLE...`;
     }
 
     // Gate Chainlink fulfill on matching Chainlink id.
      if (eventName == "ChainlinkFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.id == chainlinkRequestId) {
-      // document.querySelector('#loading-text').innerHTML = `UPDATING WORD #${tokenID} FROM ORACLE...`;
     }
 
     // Gate event request id on matching Chainlink id.
     if (eventName == "RemoteMintFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.requestId == chainlinkRequestId) {
       let resultId = event.returnValues.resultId;
-      // window.location.href = `word?token=${tokenID}`;
     }
   });
 
