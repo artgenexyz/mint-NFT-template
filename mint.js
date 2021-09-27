@@ -122,7 +122,7 @@ const mint = async (nTokens, tier) => {
 
   const mintFunction = ({ numberOfTokens, ref, tier }) => {
     if (tier) {
-      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? "");
+      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
     }
     return contract.methods.mint(numberOfTokens);
   }
