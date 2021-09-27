@@ -1,6 +1,7 @@
 import { tigerAddress, tigerAbi } from './contracts/tiger-fight-club.js';
 import { wordsAddress, wordsAbi } from './contracts/cryptowords.js';
 import { apesAddress, apesAbi } from './contracts/textapes.js';
+import { moonAddress, moonAbi } from './contracts/moon.js';
 import { web3 } from './connectWallet.js';
 
 export let address;
@@ -19,6 +20,9 @@ if (window.location.hostname.includes('cryptowords')) {
   address = apesAddress;
   abi = apesAbi;
   mintPrice = 0.02;
+} else if (window.location.hostname.includes('georgy-nft.webflow.io')) {
+  address = moonAddress;
+  abi = moonAbi;
 }
 
 export let contract = new web3.eth.Contract(abi, address);
