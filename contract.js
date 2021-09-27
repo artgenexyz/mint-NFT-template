@@ -11,15 +11,12 @@ export let mintPrice;
 if (window.location.hostname.includes('cryptowords')) {
   address = wordsAddress;
   abi = wordsAbi;
-  mintPrice = 0.01;
 } else if (window.location.hostname.includes('tigersfightclub.com')) {
   address = tigerAddress;
   abi = tigerAbi;
-  mintPrice = 0.03;
 } else if (window.location.hostname.includes('textapes.art')) {
   address = apesAddress;
   abi = apesAbi;
-  mintPrice = 0.02;
 } else if (window.location.hostname.includes('georgy-nft.webflow.io')) {
   address = moonAddress;
   abi = moonAbi;

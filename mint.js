@@ -1,4 +1,4 @@
-import { address, contract, mintPrice } from './contract.js';
+import { address, contract } from './contract.js';
 import { web3, connectMetaMask } from './connectWallet.js';
 
 let tokenID;
@@ -18,7 +18,7 @@ const startMint = async () => {
   const startContainer = document.querySelector('#start-container');
   if (!startContainer) {
     document.querySelector('#start-container').style = "display:none";
-    await claim();
+    await mint();
     return;
   }
 
@@ -30,7 +30,7 @@ const startMint = async () => {
 
   document.querySelector('#submit-quantity-form').addEventListener("submit", async (e) => {
     const nTokens = document.querySelector('#quantity-select').value;
-    await claim(nTokens);
+    await mint(nTokens);
   });
 
 }
@@ -58,7 +58,7 @@ const generate = async () => {
   document.querySelector('#generate-view-opensea').href = `https://opensea.io/assets/${address}/${tokenID}`;
 }
 
-const claim = async (nTokens) => {
+const mint = async (nTokens, tier) => {
   document.querySelector('#loading-container').style = "display:flex";
   document.querySelector('#generate-container').style = "display:none";
 
@@ -75,7 +75,6 @@ const claim = async (nTokens) => {
   let accounts = await web3.eth.getAccounts();
   let wallet = ethereum.selectedAddress || accounts[0];
 
-  // Network
   let network = await ethereum.request({ method: 'net_version' })
   console.log(network);
   if (network != "1" && network != "4") {
@@ -118,11 +117,14 @@ const claim = async (nTokens) => {
 
   const searchParams = new URLSearchParams(window.location.search);
   const numberOfTokens = nTokens ?? searchParams.get("quantity") ?? 1;
-  // Minting
-  let mint = await contract.methods.mint(numberOfTokens)
+  const mintPrice = tier ?
+                    await contract.methods.getPrice(tier).call() :
+                    await contract.methods.getPrice().call();
+
+  const mint = await contract.methods.mint(numberOfTokens)
     .send({
       from: wallet,
-      value: mintPrice * numberOfTokens * 1e18,
+      value: mintPrice * numberOfTokens,
       gasLimit: `${180000 * numberOfTokens}`
     })
     .then(async (result) => {
