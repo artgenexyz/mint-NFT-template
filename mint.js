@@ -118,8 +118,16 @@ const mint = async (nTokens, tier) => {
   const mintPrice = tier ?
                     await contract.methods.getPrice(tier).call() :
                     await contract.methods.getPrice().call();
+  const ref = searchParams.get("ref");
 
-  const mint = await contract.methods.mint(numberOfTokens)
+  const mintFunction = ({ numberOfTokens, ref, tier }) => {
+    if (tier) {
+      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? "");
+    }
+    return contract.methods.mint(numberOfTokens);
+  }
+
+  const mint = await mintFunction({ numberOfTokens, ref, tier })
     .send({
       from: wallet,
       value: mintPrice * numberOfTokens,
