@@ -60,7 +60,7 @@ const generate = async () => {
   (document.querySelector('#generate-view-opensea') ?? {}).href = `https://opensea.io/assets/${address}/${tokenID}`;
 }
 
-const mint = async (nTokens, tier) => {
+export const mint = async (nTokens, tier) => {
   (document.querySelector('#loading-container') ?? {}).style = "display:flex";
   (document.querySelector('#generate-container') ?? {}).style = "display:none";
 
