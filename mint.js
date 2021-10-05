@@ -157,6 +157,7 @@ const shouldLaunchMint = () => {
 if (shouldLaunchMint()) {
   document.onload = startMint();
 }
+(document.querySelector('#mint-button') ?? {}).onclick = () => mint();
 
 window.contract = contract;
 window.web3 = web3;

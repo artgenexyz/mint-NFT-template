@@ -8,7 +8,10 @@ export let address;
 export let abi;
 export let mintPrice;
 
-if (window.location.hostname.includes('cryptowords')) {
+if (window?.WEBSITE_URL?.includes(window.location.hostname)) {
+  address = window.CONTRACT_ADDRESS;
+  abi = window.CONTRACT_ABI;
+} else if (window.location.hostname.includes('cryptowords')) {
   address = wordsAddress;
   abi = wordsAbi;
 } else if (window.location.hostname.includes('tigersfightclub.com')) {
