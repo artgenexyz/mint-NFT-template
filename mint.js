@@ -121,10 +121,15 @@ export const mint = async (nTokens, tier) => {
   const ref = searchParams.get("ref");
 
   const mintFunction = ({ numberOfTokens, ref, tier }) => {
-    if (tier) {
-      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
+    try {
+      if (tier) {
+        return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
+      }
+      return contract.methods.mint(numberOfTokens);
+    } catch (error) {
+      isLoading = false;
+      console.log(error);
     }
-    return contract.methods.mint(numberOfTokens);
   }
 
   const mint = await mintFunction({ numberOfTokens, ref, tier })
@@ -140,11 +145,16 @@ export const mint = async (nTokens, tier) => {
           tokenID = parseInt(res.slice(-1)[0]);
         }
       })
+      isLoading = false;
       await generate();
     })
     .catch(error => {
-      alert("NFT minting error. Please try refreshing page, check your MetaMask connection or contact our support to resolve");
-      console.log(error);
+      isLoading = false;
+      // User didn't reject the transaction
+      if (error.code !== 4001) {
+        alert("NFT minting error. Please try refreshing page, check your MetaMask connection or contact our support to resolve");
+        console.log(error);
+      }
     });
 }
 
