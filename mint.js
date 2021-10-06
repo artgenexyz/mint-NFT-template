@@ -3,7 +3,6 @@ import { web3, connectMetaMask } from './connectWallet.js';
 
 let tokenID;
 let isLoading = false;
-let isPaused = false;
 
 const updateMintedCounter = async () => {
   const counter = document.querySelector('#total-minted');
@@ -15,21 +14,32 @@ const updateMintedCounter = async () => {
 }
 
 const startMint = async () => {
+  if (isLoading) {
+    return false;
+  }
+  isLoading = true;
+
+  (document.querySelector('#generate-container') ?? {}).style = "display:none";
   const startContainer = document.querySelector('#start-container');
   if (!startContainer) {
-    await mint();
-    return;
+    return await mint().then(() => {
+      isLoading = false;
+    }).catch((e) =>  {
+      isLoading = false;
+    });
   }
 
   updateMintedCounter();
   setInterval(updateMintedCounter, 5000);
 
   document.querySelector('#loading-container').style = "display:none";
-  document.querySelector('#generate-container').style = "display:none";
-
   document.querySelector('#submit-quantity-form').addEventListener("submit", async (e) => {
     const nTokens = document.querySelector('#quantity-select').value;
-    await mint(nTokens);
+    await mint(nTokens).then(() => {
+      isLoading = false;
+    }).catch((e) =>  {
+      isLoading = false;
+    })
   });
 
 }
@@ -62,7 +72,6 @@ const generate = async () => {
 
 export const mint = async (nTokens, tier) => {
   (document.querySelector('#loading-container') ?? {}).style = "display:flex";
-  (document.querySelector('#generate-container') ?? {}).style = "display:none";
 
   try {
     await connectMetaMask(false);
@@ -70,48 +79,13 @@ export const mint = async (nTokens, tier) => {
     alert("Connect MetaMask wallet to continue");
   }
 
-  if (isLoading || isPaused) {
-    return false;
-  }
-
-  let accounts = await web3.eth.getAccounts();
-  let wallet = ethereum.selectedAddress || accounts[0];
-
-  let network = await ethereum.request({ method: 'net_version' })
-  console.log(network);
+  const accounts = await web3.eth.getAccounts();
+  const wallet = ethereum.selectedAddress || accounts[0];
+  const network = await ethereum.request({ method: 'net_version' })
   if (network != "1" && network != "4") {
     alert("Only Ethereum network is supported. It looks like you’re connected to a different network. Please check your settings and try again.");
     return;
   }
-
-  isLoading = true;
-
-  // Listener
-  let transferBlockHash = "";
-  let chainlinkRequestId = "";
-
-  contract.events.allEvents({}, function(error, event) {
-    let eventName = event.event;
-
-    // Gate block hash on transfer matching sender address.
-    if (eventName == "Transfer" && event.returnValues.to.toLowerCase() == wallet.toLowerCase()) {
-      transferBlockHash = event.blockHash;
-    }
-
-    // Gate Chainlink id on block hash matching Transfer.
-    if (eventName == "ChainlinkRequested" && transferBlockHash.length > 0 && event.blockHash == transferBlockHash) {
-      chainlinkRequestId = event.returnValues.id;
-    }
-
-    // Gate Chainlink fulfill on matching Chainlink id.
-     if (eventName == "ChainlinkFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.id == chainlinkRequestId) {
-    }
-
-    // Gate event request id on matching Chainlink id.
-    if (eventName == "RemoteMintFulfilled" && chainlinkRequestId.length > 0 && event.returnValues.requestId == chainlinkRequestId) {
-      let resultId = event.returnValues.resultId;
-    }
-  });
 
   const searchParams = new URLSearchParams(window.location.search);
   const numberOfTokens = nTokens ?? searchParams.get("quantity") ?? 1;
@@ -121,18 +95,13 @@ export const mint = async (nTokens, tier) => {
   const ref = searchParams.get("ref");
 
   const mintFunction = ({ numberOfTokens, ref, tier }) => {
-    try {
-      if (tier) {
-        return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
-      }
-      return contract.methods.mint(numberOfTokens);
-    } catch (error) {
-      isLoading = false;
-      console.log(error);
+    if (tier) {
+      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
     }
+    return contract.methods.mint(numberOfTokens);
   }
 
-  const mint = await mintFunction({ numberOfTokens, ref, tier })
+  return await mintFunction({ numberOfTokens, ref, tier })
     .send({
       from: wallet,
       value: mintPrice * numberOfTokens,
@@ -145,11 +114,9 @@ export const mint = async (nTokens, tier) => {
           tokenID = parseInt(res.slice(-1)[0]);
         }
       })
-      isLoading = false;
       await generate();
     })
     .catch(error => {
-      isLoading = false;
       // User didn't reject the transaction
       if (error.code !== 4001) {
         alert("NFT minting error. Please try refreshing page, check your MetaMask connection or contact our support to resolve");
