@@ -101,12 +101,14 @@ export const mint = async (nTokens, tier) => {
     return contract.methods.mint(numberOfTokens);
   }
 
+  const txParams = {
+    from: wallet,
+    value: mintPrice * numberOfTokens,
+  }
+  const estimatedGas = await mintFunction({ numberOfTokens, ref, tier }).estimateGas(txParams);
+
   return await mintFunction({ numberOfTokens, ref, tier })
-    .send({
-      from: wallet,
-      value: mintPrice * numberOfTokens,
-      gasLimit: `${180000 * numberOfTokens}`
-    })
+    .send({...txParams, gasLimit: estimatedGas + 5000 })
     .then(async (result) => {
       await contract.methods.walletOfOwner(wallet).call((err, res) => {
         if (!err && res.length) {
