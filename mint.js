@@ -95,8 +95,8 @@ export const mint = async (nTokens, tier) => {
   const ref = searchParams.get("ref");
 
   const mintFunction = ({ numberOfTokens, ref, tier }) => {
-    if (tier) {
-      return contract.methods.mintTierReferral(tier, numberOfTokens, ref ?? wallet);
+    if (tier !== undefined) {
+      return contract.methods.mintTierReferral(numberOfTokens, tier, ref ?? wallet);
     }
     return contract.methods.mint(numberOfTokens);
   }
