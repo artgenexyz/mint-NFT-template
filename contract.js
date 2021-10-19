@@ -14,7 +14,7 @@ if (window?.WEBSITE_URL?.includes(window.location.hostname)) {
 } else if (window.location.hostname.includes('cryptowords')) {
   address = wordsAddress;
   abi = wordsAbi;
-} else if (window.location.hostname.includes('tigersfightclub.com')) {
+} else if (window.location.hostname.includes('tigersfightclub.art')) {
   address = tigerAddress;
   abi = tigerAbi;
 } else if (window.location.hostname.includes('textapes.art')) {
