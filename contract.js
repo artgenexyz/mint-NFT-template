@@ -20,7 +20,7 @@ if (window?.WEBSITE_URL?.includes(window.location.hostname)) {
 } else if (window.location.hostname.includes('textapes.art')) {
   address = apesAddress;
   abi = apesAbi;
-} else if (window.location.hostname.includes('georgy-nft.webflow.io')) {
+} else if (window.location.hostname.includes('georgy-nft.webflow.io') || window.location.hostname.includes('app.nftmoon.space')) {
   address = moonAddress;
   abi = moonAbi;
 }
