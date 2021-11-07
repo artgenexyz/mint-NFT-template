@@ -105,7 +105,16 @@ export const mint = async (nTokens, tier) => {
     from: wallet,
     value: mintPrice * numberOfTokens,
   }
-  const estimatedGas = await mintFunction({ numberOfTokens, ref, tier }).estimateGas(txParams);
+  const estimatedGas = await mintFunction({ numberOfTokens, ref, tier })
+      .estimateGas(txParams).catch((e) => {
+        const code = e.code ?? JSON.parse(`{${e.message.split("{")[1]}`).code;
+        if (code === -32000) {
+          return 300000;
+        }
+        const message = e.message.split("{")[0].trim();
+        alert(`Error ${message}. Please try refreshing page, check your MetaMask connection or contact us to resolve`);
+        console.log(e);
+      })
 
   return await mintFunction({ numberOfTokens, ref, tier })
     .send({...txParams, gasLimit: estimatedGas + 5000 })
