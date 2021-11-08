@@ -1,6 +1,6 @@
 # Mint NFTs on Webflow
 
-No coding skills required! Check out our ready-to-use templates: https://cryptowords.webflow.io/, https://textapes.art.
+No coding skills required! Check out our ready-to-use template: https://textapes.art.
 
 [Contact us](https://buildship.dev) to get these Webflow templates and deploy your creator-owned NFT collection
 
