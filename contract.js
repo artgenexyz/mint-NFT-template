@@ -10,7 +10,8 @@ export let mintPrice;
 
 if (window?.WEBSITE_URL?.includes(window.location.hostname)) {
   address = window.CONTRACT_ADDRESS;
-  abi = window.CONTRACT_ABI;
+  abi = typeof window.CONTRACT_ABI === 'string'
+      ? JSON.parse(window.CONTRACT_ABI) : window.CONTRACT_ABI;
 } else if (window.location.hostname.includes('cryptowords')) {
   address = wordsAddress;
   abi = wordsAbi;
