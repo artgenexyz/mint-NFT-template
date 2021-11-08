@@ -88,7 +88,8 @@ export const mint = async (nTokens, tier) => {
   }
 
   const searchParams = new URLSearchParams(window.location.search);
-  const numberOfTokens = nTokens ?? searchParams.get("quantity") ?? 1;
+  const inputQuantity = document.querySelector('#quantity-select')?.value;
+  const numberOfTokens = nTokens ?? inputQuantity ?? 1;
   const mintPrice = tier ?
                     await contract.methods.getPrice(tier).call() :
                     await contract.methods.getPrice().call();
