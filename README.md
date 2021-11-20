@@ -1,5 +1,7 @@
 # Mint NFTs on Webflow
 
+> :warning: WARNING: This code is not longer supported, the new one is here: https://github.com/buildship-dev/webflow-nft-components/tree/main/mint
+
 No coding skills required! Check out our ready-to-use template: https://textapes.art.
 
 [Contact us](https://buildship.dev) to get these Webflow templates and deploy your creator-owned NFT collection
